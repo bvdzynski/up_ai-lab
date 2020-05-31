@@ -108,13 +108,13 @@ PL 20-708 Lublin, Poland\\
 \linia\\
  W ramach przygotowania danych do pracy musiałem podmienić nazwy klas (w oryginalnym pliku zostały użyte liczby - 1, 2, 3), użyłem w tym celu VSCode oraz narzędzia regex. W skrypcie jako komentarz również pojawia się informacja na ten temat.\\
  
- \textbf{Link do oryginalnych danych:} \textcolor{red}{\href{https://github.com/bvdzynski/up_ai-lab}{ORYGINALNE}}\\
+ \textbf{Link do oryginalnych danych:} \textcolor{red}{\href{https://github.com/bvdzynski/up_ai-lab/blob/master/lab5_project_seeds/data/seeds_dataset_original.txt}{ORYGINALNE}}\\
  
- \textbf{Link do przygotowanych danych:} \textcolor{red}{\href{https://github.com/bvdzynski/up_ai-lab}{PRZYGOTOWANE}}\\
+ \textbf{Link do przygotowanych danych:} \textcolor{red}{\href{https://github.com/bvdzynski/up_ai-lab/blob/master/lab5_project_seeds/data/seeds_dataset_changed.data}{PRZYGOTOWANE}}\\
  
 \section*{Kod}
 \linia\\
-\textbf{Link do projektu ze skryptem:} \textcolor{red}{\href{https://github.com/bvdzynski/up_ai-lab}{GITHUB}}\\
+\textbf{Link do projektu ze skryptem:} \textcolor{red}{\href{https://github.com/bvdzynski/up_ai-lab/tree/master/lab5_project_seeds}{GITHUB}}\\
 
 Klasyfikacji dokonałem przy użyciu skryptu języka R.
 Opiera się on na kodzie z odbytych ćwiczeń, jednak na potrzeby zadania zaszła potrzeba modyfikacji.\\
@@ -155,9 +155,9 @@ Rosa & 0 & 0 & \textbf{33} &  \\
 \begin{table}[H]
 \begin{tabular}{ccccc}
 prediction & TPR (True Positive Rate) &  \\
-Canadian & 36/40 (ok. 60\%) & \\
-Kama & 30/31 (ok. 60\%) & \\
-Rosa & 33/34 (ok. 60\%) & \\
+Canadian & 36/40 (90\%) & \\
+Kama & 30/31 (ok. 97\%) & \\
+Rosa & 33/34 (ok. 97\%) & \\
 &&
 \end{tabular}
 \caption{\textit{True Positive Rate dla 5 neuronów w warstwie ukrytej}}
@@ -182,8 +182,8 @@ Rosa & 0 & 0 & \textbf{34} &  \\
 \begin{table}[H]
 \begin{tabular}{ccccc}
 prediction & TPR (True Positive Rate) &  \\
-Canadian & 35/40 (ok. 60\%) & \\
-Kama & 30/31 (ok. 60\%) & \\
+Canadian & 35/40 (87,5\%) & \\
+Kama & 30/31 (ok. 97\%) & \\
 Rosa & 34/34 (100\%) & \\
 &&
 \end{tabular}
@@ -209,8 +209,8 @@ Rosa & 0 & 0 & \textbf{34} &  \\
 \begin{table}[H]
 \begin{tabular}{ccccc}
 prediction & TPR (True Positive Rate) &  \\
-Canadian & 36/40 (ok. 60\%) & \\
-Kama & 30/31 (ok. 60\%) & \\
+Canadian & 36/40 (90\%) & \\
+Kama & 30/31 (ok. 97\%) & \\
 Rosa & 34/34 (100\%) & \\
 &&
 \end{tabular}
@@ -236,8 +236,8 @@ Rosa & 0 & 0 & \textbf{34} &  \\
 \begin{table}[H]
 \begin{tabular}{ccccc}
 prediction & TPR (True Positive Rate) &  \\
-Canadian & 36/40 (ok. 60\%) & \\
-Kama & 30/31 (ok. 60\%) & \\
+Canadian & 36/40 (90\%) & \\
+Kama & 30/31 (ok. 97\%) & \\
 Rosa & 34/34 (100\%) & \\
 &&
 \end{tabular}
@@ -263,8 +263,8 @@ Rosa & 0 & 1 & \textbf{34} &  \\
 \begin{table}[H]
 \begin{tabular}{ccccc}
 prediction & TPR (True Positive Rate) &  \\
-Canadian & 35/40 (ok. 60\%) & \\
-Kama & 29/31 (ok. 60\%) & \\
+Canadian & 35/40 (87,5\%) & \\
+Kama & 29/31 (ok. 93,5\%) & \\
 Rosa & 34/34 (100\%) & \\
 &&
 \end{tabular}
@@ -282,9 +282,9 @@ Wyniki sklasyfikowania dla każdej próby okazały się wysokie i stosunkowo bar
 
 Najwyższy procent prawidłowo sklasyfikowanych obiektów został osiągnięty przy liczbie 15 i 20 neuronów w warstwie ukrytej (ok. 95\%).\\
 
-Procent prawidłowo sklasyfikowanych obiektów wzrastał do liczby 15 neuronów, natomiast zaczął maleć przy 25 neuronach.\\
+Procent prawidłowo sklasyfikowanych obiektów wzrastał do liczby 15 neuronów, spadek został zauważony na etapie 25 neuronów.\\
 
-Procent prawidłowo sklasyfikowanych obiektów osiągnięty przy liczbie 25 neuronów był niższy, niż w przy liczbie 5, 10, 15 i 20 neuronów.\\
+Procent prawidłowo sklasyfikowanych obiektów osiągnięty przy liczbie 25 neuronów był niższy niż w przy liczbie 5, 10, 15 i 20 neuronów.\\
 
 Na podstawie osiągniętych wyników wnioskuję, że ilość neuronów w wybranym przeze mnie pakiecie danych nie ma znaczącego wpływu na osiągane wyniki w klasyfikacji obiektów.
 
