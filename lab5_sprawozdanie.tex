@@ -1,0 +1,345 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\renewcommand\familydefault{\sfdefault}
+\usepackage{tgheros}
+\usepackage[defaultmono]{droidmono}
+\usepackage{amsmath,amssymb,amsthm,textcomp}
+\usepackage{enumerate}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{geometry}
+\geometry{left=25mm,right=25mm,%
+bindingoffset=0mm, top=20mm,bottom=20mm}
+\linespread{1.3}
+\newcommand{\linia}{\rule{\linewidth}{0.5pt}}
+
+% custom theorems if needed
+\newtheoremstyle{mytheor}
+    {1ex}{1ex}{\normalfont}{0pt}{\scshape}{.}{1ex}
+    {{\thmname{#1 }}{\thmnumber{#2}}{\thmnote{ (#3)}}}
+
+\theoremstyle{mytheor}
+\newtheorem{defi}{Definition}
+
+% my own titles
+\makeatletter
+\renewcommand{\maketitle}{
+\begin{center}
+\vspace{2ex}
+{\huge \textsc{\@title}}
+\vspace{1ex}
+\\
+\linia\\
+\@author \hfill \@date
+\vspace{4ex}
+\end{center}
+}
+\makeatother
+%%%
+
+% custom footers and headers
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{listings}
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{}
+\lfoot{Sztuczna Inteligencja, Sprawozdanie nr 5}
+\cfoot{}
+\rfoot{Strona \thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\usepackage[tablename=Tablica]{caption}
+%
+
+%%%----------%%%----------%%%----------%%%----------%%%
+
+\begin{document}
+
+\title{SI - SPRAWOZDANIE LAB nr 5}
+
+\author{Maciej Budzowski, dzienne, grupa L5}
+
+\date{09/05/2020}
+
+\maketitle
+Link do pliku .tex na platformie OverLeaf: \textcolor{red}{\href{https://www.overleaf.com/read/gtjhbdddtygc}{OVERLEAF}}\\
+\section*{Wstęp}
+
+Za zadanie miałem wytrenować sieć neuronową dla różnej liczby neuronowej w warstwie ukrytej oraz zbadać wpływ liczby neuronowej na otrzymane rezultaty.
+
+\section*{Użyty zbiór danych}
+
+Do wykonania zadania użyłem zbioru \textbf{\emph{seeds}}, linki do źródeł zamieszczam poniżej:\\
+\textcolor{red}{\href{https://archive.ics.uci.edu/ml/machine-learning-databases/00236/seeds_dataset.txt}{DANE (PLIK)}} (link prowadzi do oryginalnego pliku)\\
+\textcolor{red}{\href{https://archive.ics.uci.edu/ml/datasets/seeds}{DANE (STRONA)}} (link prowadzi do strony datasetu)\\
+
+\textbf{Opis/temat zbioru:} Pomiary właściwości geometrycznych ziaren należących do trzech różnych odmian pszenicy. Zastosowano miękką technikę rentgenowską i pakiet ZIARNA do skonstruowania wszystkich siedmiu atrybutów o wartościach rzeczywistych.\\
+
+\textbf{Autorzy:}\\
+Małgorzata Charytanowicz, Jerzy Niewczas\\
+Institute of Mathematics and Computer Science,\\
+The John Paul II Catholic University of Lublin, Konstantynów 1 H\\
+PL 20-708 Lublin, Poland\\
+
+\textbf{Parametry użytego zbioru:}\\
+ - liczba obserwacji - 210\\
+ - liczba cech - 7 (+1 - klasa)\\
+ - liczba klas - 3 (1, 2, 3 - odpowiednio "Kama", "Rosa", "Canadian")\\
+ - liczba elementów na klasę - "po równo" - 70 elementów dla każdej z klas\\
+
+\textbf{Rodzaje cech w zbiorze:}\\
+ - area (A) (type - real)\\
+ - perimeter (P) (type - real)\\
+ - compactness (C = 4*pi*A/P2) (type - real)\\
+ - length of kernel (type - real)\\
+ - width of kernel (type - real)\\
+ - asymmetry coefficient (type - real)\\
+ - length of kernel groove (type - real)\\
+ - class (nazwa klasy)\\
+
+\section*{Przygotowanie danych}
+\linia\\
+ W ramach przygotowania danych do pracy musiałem podmienić nazwy klas (w oryginalnym pliku zostały użyte liczby - 1, 2, 3), użyłem w tym celu VSCode oraz narzędzia regex. W skrypcie jako komentarz również pojawia się informacja na ten temat.\\
+ 
+ \textbf{Link do oryginalnych danych:} \textcolor{red}{\href{https://github.com/bvdzynski/up_ai-lab}{ORYGINALNE}}\\
+ 
+ \textbf{Link do przygotowanych danych:} \textcolor{red}{\href{https://github.com/bvdzynski/up_ai-lab}{PRZYGOTOWANE}}\\
+ 
+\section*{Kod}
+\linia\\
+\textbf{Link do projektu ze skryptem:} \textcolor{red}{\href{https://github.com/bvdzynski/up_ai-lab}{GITHUB}}\\
+
+Klasyfikacji dokonałem przy użyciu skryptu języka R.
+Opiera się on na kodzie z odbytych ćwiczeń, jednak na potrzeby zadania zaszła potrzeba modyfikacji.\\
+
+Część właściwego treningu i wypisywania wyników zamknąłem w funkcji, która zostaje wywołana w pętli wraz z odpowiednią wartością \textbf{\emph{neuralCount}} (ilości neutronów). Pozwoliło to na automatyzację procesu. (Podczas prób zauważyłem, że zwiększenie ilości neuronów znacząco wydłuża czas skryptu.)\\
+
+Pozwoliłem sobie również na zwiększenie parametru \textbf{\emph{threshold}} na 0.1 (domyślna wartość 0.01)
+
+\begin{lstlisting}[language=R]
+nn <- neuralnet(Kama + Rosa + Canadian ~
+                area + perimeter + compactness + 
+                kernel_length + kernel_width + 
+                asymmetry_coefficient + length_kernel_groove,
+              data = neuralNet_seedsTrain,
+              hidden = c(neuralCount),
+              stepmax = 1e+06,
+              threshold = 0.1
+)
+\end{lstlisting}
+
+\section*{Wyniki}
+\linia\\
+*Zbiory treningowe i walidacyjne - każdy z nich stanowi połowę całości rekordów.\\
+
+\textbf{Liczba neuronów: 5}\\
+
+\begin{table}[H]
+\begin{tabular}{ccccc}
+prediction & Canadian & Kama & Rosa  &  \\
+Canadian & \textbf{36} & 1 & 0 &  \\
+Kama & 4 & \textbf{30} & 1 &  \\
+Rosa & 0 & 0 & \textbf{33} &  \\
+&&&& 
+\end{tabular}
+\caption{\textit{macierz pomyłek dla 5 neuronów w warstwie ukrytej}}
+\label{tab:1}
+\end{table}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+prediction & TPR (True Positive Rate) &  \\
+Canadian & 36/40 (ok. 60\%) & \\
+Kama & 30/31 (ok. 60\%) & \\
+Rosa & 33/34 (ok. 60\%) & \\
+&&
+\end{tabular}
+\caption{\textit{True Positive Rate dla 5 neuronów w warstwie ukrytej}}
+\label{tab:2}
+\end{table}
+\textbf{Recognition Rate: 0.9428571}\\
+\linia\\
+
+\textbf{Liczba neuronów: 10}\\
+
+\begin{table}[H]
+\begin{tabular}{ccccc}
+prediction & Canadian & Kama & Rosa  &  \\
+Canadian & \textbf{35} & 1 & 0 &  \\
+Kama & 5 & \textbf{30} & 0 &  \\
+Rosa & 0 & 0 & \textbf{34} &  \\
+&&&& 
+\end{tabular}
+\caption{\textit{macierz pomyłek dla 10 neuronów w warstwie ukrytej}}
+\label{tab:3}
+\end{table}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+prediction & TPR (True Positive Rate) &  \\
+Canadian & 35/40 (ok. 60\%) & \\
+Kama & 30/31 (ok. 60\%) & \\
+Rosa & 34/34 (100\%) & \\
+&&
+\end{tabular}
+\caption{\textit{True Positive Rate dla 10 neuronów w warstwie ukrytej}}
+\label{tab:4}
+\end{table}
+\textbf{Recognition Rate: 0.9428571}\\
+\linia\\
+
+\textbf{Liczba neuronów: 15}\\
+
+\begin{table}[H]
+\begin{tabular}{ccccc}
+prediction & Canadian & Kama & Rosa  &  \\
+Canadian & \textbf{36} & 1 & 0 &  \\
+Kama & 4 & \textbf{30} & 0 &  \\
+Rosa & 0 & 0 & \textbf{34} &  \\
+&&&& 
+\end{tabular}
+\caption{\textit{macierz pomyłek dla 15 neuronów w warstwie ukrytej}}
+\label{tab:5}
+\end{table}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+prediction & TPR (True Positive Rate) &  \\
+Canadian & 36/40 (ok. 60\%) & \\
+Kama & 30/31 (ok. 60\%) & \\
+Rosa & 34/34 (100\%) & \\
+&&
+\end{tabular}
+\caption{\textit{True Positive Rate dla 15 neuronów w warstwie ukrytej}}
+\label{tab:6}
+\end{table}
+\textbf{Recognition Rate: 0.952381}\\
+\linia\\
+
+\textbf{Liczba neuronów: 20}\\
+
+\begin{table}[H]
+\begin{tabular}{ccccc}
+prediction & Canadian & Kama & Rosa  &  \\
+Canadian & \textbf{36} & 1 & 0 &  \\
+Kama & 4 & \textbf{30} & 1 &  \\
+Rosa & 0 & 0 & \textbf{34} &  \\
+&&&& 
+\end{tabular}
+\caption{\textit{macierz pomyłek dla 20 neuronów w warstwie ukrytej}}
+\label{tab:7}
+\end{table}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+prediction & TPR (True Positive Rate) &  \\
+Canadian & 36/40 (ok. 60\%) & \\
+Kama & 30/31 (ok. 60\%) & \\
+Rosa & 34/34 (100\%) & \\
+&&
+\end{tabular}
+\caption{\textit{True Positive Rate dla 20 neuronów w warstwie ukrytej}}
+\label{tab:8}
+\end{table}
+\textbf{Recognition Rate: 0.952381} \\
+
+\textbf{Liczba neuronów: 25}\\
+\linia\\
+
+\begin{table}[H]
+\begin{tabular}{ccccc}
+prediction & Canadian & Kama & Rosa  &  \\
+Canadian & \textbf{35} & 1 & 0 &  \\
+Kama & 5 & \textbf{29} & 1 &  \\
+Rosa & 0 & 1 & \textbf{34} &  \\
+&&&& 
+\end{tabular}
+\caption{\textit{macierz pomyłek dla 25 neuronów w warstwie ukrytej}}
+\label{tab:9}
+\end{table}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+prediction & TPR (True Positive Rate) &  \\
+Canadian & 35/40 (ok. 60\%) & \\
+Kama & 29/31 (ok. 60\%) & \\
+Rosa & 34/34 (100\%) & \\
+&&
+\end{tabular}
+\caption{\textit{True Positive Rate dla 25 neuronów w warstwie ukrytej}}
+\label{tab:10}
+\end{table}
+\textbf{Recognition Rate: 0.9333333}
+
+\linia\\
+
+\section*{Wnioski}
+Czas trenowania wzrastał wraz z ilością neuronów w warstwie ukrytej, a malał wraz ze wzrostem parametru \textbf{\emph{threshold}}.\\
+
+Wyniki sklasyfikowania dla każdej próby okazały się wysokie i stosunkowo bardzo do siebie zbliżone.\\
+
+Najwyższy procent prawidłowo sklasyfikowanych obiektów został osiągnięty przy liczbie 15 i 20 neuronów w warstwie ukrytej (ok. 95\%).\\
+
+Procent prawidłowo sklasyfikowanych obiektów wzrastał do liczby 15 neuronów, natomiast zaczął maleć przy 25 neuronach.\\
+
+Procent prawidłowo sklasyfikowanych obiektów osiągnięty przy liczbie 25 neuronów był niższy, niż w przy liczbie 5, 10, 15 i 20 neuronów.\\
+
+Na podstawie osiągniętych wyników wnioskuję, że ilość neuronów w wybranym przeze mnie pakiecie danych nie ma znaczącego wpływu na osiągane wyniki w klasyfikacji obiektów.
+
+\section*{Oryginalne wyniki z konsoli IDE RStudio}
+\linia\\
+\begin{lstlisting}[language=R]
+[1] "Neural network number 1 - number of neurals:  5"
+[1] "Confusion matrix:"
+          
+prediction Canadian Kama Rosa
+  Canadian       36    1    0
+  Kama            4   30    1
+  Rosa            0    0   33
+[1] "Recognition rate:"
+[1] 0.9428571
+
+[1] "Neural network number 2 - number of neurals:  10"
+[1] "Confusion matrix:"
+          
+prediction Canadian Kama Rosa
+  Canadian       35    1    0
+  Kama            5   30    0
+  Rosa            0    0   34
+[1] "Recognition rate:"
+[1] 0.9428571
+
+[1] "Neural network number 3 - number of neurals:  15"
+[1] "Confusion matrix:"
+          
+prediction Canadian Kama Rosa
+  Canadian       36    1    0
+  Kama            4   30    0
+  Rosa            0    0   34
+[1] "Recognition rate:"
+[1] 0.952381
+
+[1] "Neural network number 4 - number of neurals:  20"
+[1] "Confusion matrix:"
+          
+prediction Canadian Kama Rosa
+  Canadian       36    1    0
+  Kama            4   30    0
+  Rosa            0    0   34
+[1] "Recognition rate:"
+[1] 0.952381
+
+[1] "Neural network number 5 - number of neurals:  25"
+[1] "Confusion matrix:"
+          
+prediction Canadian Kama Rosa
+  Canadian       35    1    0
+  Kama            5   29    0
+  Rosa            0    1   34
+[1] "Recognition rate:"
+[1] 0.9333333
+\end{lstlisting}
+
+\end{document}
