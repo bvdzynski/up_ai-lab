@@ -1,7 +1,7 @@
 library("party")
 library("randomForest")
 
-data<-read.csv('C:\\Users\\macik\\Desktop\\lab8_project\\data\\australian.dat', header=FALSE, sep = ' ')
+data<-read.csv('...\\lab8_project\\data\\australian.dat', header=FALSE, sep = ' ')
 
 #according to lesson - remove binary columns (except class column - v15)
 australian<-data[,c(2:7,10,12:15)]

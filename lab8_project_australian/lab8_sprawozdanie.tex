@@ -1,0 +1,265 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\renewcommand\familydefault{\sfdefault}
+\usepackage{tgheros}
+\usepackage[defaultmono]{droidmono}
+\usepackage{amsmath,amssymb,amsthm,textcomp}
+\usepackage{enumerate}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{geometry}
+\usepackage{dirtytalk}
+\geometry{left=25mm,right=25mm,%
+bindingoffset=0mm, top=20mm,bottom=20mm}
+\linespread{1.3}
+\newcommand{\linia}{\rule{\linewidth}{0.5pt}}
+
+% custom theorems if needed
+\newtheoremstyle{mytheor}
+    {1ex}{1ex}{\normalfont}{0pt}{\scshape}{.}{1ex}
+    {{\thmname{#1 }}{\thmnumber{#2}}{\thmnote{ (#3)}}}
+
+\theoremstyle{mytheor}
+\newtheorem{defi}{Definition}
+
+% my own titles
+\makeatletter
+\renewcommand{\maketitle}{
+\begin{center}
+\vspace{2ex}
+{\huge \textsc{\@title}}
+\vspace{1ex}
+\\
+\linia\\
+\@author \hfill \@date
+\vspace{4ex}
+\end{center}
+}
+\makeatother
+%%%
+
+% custom footers and headers
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{listings}
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{}
+\lfoot{Sztuczna Inteligencja, Sprawozdanie nr 8}
+\cfoot{}
+\rfoot{Strona \thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\usepackage[tablename=Tablica]{caption}
+%
+
+%%%----------%%%----------%%%----------%%%----------%%%
+
+\begin{document}
+
+\title{SI - SPRAWOZDANIE LAB nr 8}
+
+\author{Maciej Budzowski, dzienne, grupa L5}
+
+\date{31/05/2020}
+
+\maketitle
+Link do pliku .tex na platformie OverLeaf: \textcolor{red}{\href{https://www.overleaf.com/read/gtjhbdddtygc}{OVERLEAF}}
+
+\section*{Zad. 1: Co to jest drzewo decyzyjne? (klasyfikator)}
+\textbf{Odpowiedź:}
+
+Jest to wielostopniowy system decyzyjny, w którym klasy są kolejno odrzucane, dopóki nie osiągniemy ostatecznie przyjętej klasy.\\
+
+\textbf{Podział elementów:}
+\begin{itemize}
+  \item Drzewo decyzyjne jest formą opisu wiedzy klasyfikującej
+  \item Węzłom drzewa odpowiadają atrybuty eksplorowanej relacji
+  \item Krawędzie opisują wartości atrybutów
+  \item Liśćmi drzewa są wartości atrybutu klasyfikacyjnego
+\end{itemize}
+
+Przestrzeń cech jest podzielona na unikalne regiony, odpowiadające klasom, w sposób sekwencyjny.
+
+Sekwencja decyzji jest stosowana do poszczególnych elementów, a pytania, na które należy odpowiedzieć, mają postać „czy cecha xi <= a?” gdzie a jest wartością progową.
+
+Takie drzewa są znane jako zwykłe binarne drzewa klasyfikacji (OBCT)
+
+\section*{Zad. 2: Na jakiej zasadzie działa klasyfikator Random Forest?}
+\textbf{Odpowiedź:}
+
+Algorytm Losowych Lasów Drzew (ang. Random Forest) - jego idea polega na stworzeniu grupy dużej liczby pojedynczych drzew decyzyjnych, które działają jako zespół. Każde pojedyncze drzewo w losowym lesie wyrzuca prognozę klasy, a klasa z największą liczbą głosów staje się prognozą naszego modelu.
+
+Podstawowa koncepcja algorytmu \emph{Random Forest} jest prosta, ale potężna - mądrość tłumów. Podczas gdy niektóre drzewa mogą się mylić, wiele innych drzew będzie miało rację, więc jako grupa drzewa mogą poruszać się we właściwym kierunku.
+
+W odróżnieniu od klasycznych drzew decyzji, losowe drzewa budowane są na tej zasadzie, iż podzbiór analizowanych cech w węźle dobierany jest losowo.
+
+\section*{Zad. 3: Analiza statystyczna wybranego zbioru danych}
+
+\section*{Użyty zbiór danych}
+\linia\\
+Zbiór danych wybrałem z listy z linku \textcolor{red}{\href{https://archive.ics.uci.edu/ml/datasets.php?format=&task=cla&att=&area=&numAtt=&numIns=&type=&sort=nameUp&view=table}{LINK Z POLECENIA}}.\\
+
+Do wykonania zadania użyłem zbioru \textbf{\emph{Statlog (Australian Credit Approval)}}, linki do źródeł zamieszczam poniżej:\\
+\textcolor{red}{\href{https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/australian/australian.dat}{DANE (PLIK)}} (link prowadzi do oryginalnego pliku)\\
+\textcolor{red}{\href{https://archive.ics.uci.edu/ml/datasets/Statlog+\%28Australian+Credit+Approval\%29}{DANE (STRONA)}} (link prowadzi do strony datasetu)\\
+
+\textbf{Opis/temat zbioru:} Wedle strony datasetu: \say{Ten plik dotyczy aplikacji kart kredytowych. Wszystkie nazwy i wartości atrybutów zostały zmienione na bezsensowne symbole w celu ochrony poufności danych.}\\
+
+\textbf{Autor:}\\
+poufny, przesłane przez quinlan '@' cs.su.oz.au\\
+
+\textbf{Parametry użytego zbioru:}\\
+ - liczba obserwacji - 690\\
+ - liczba cech, atrybutów - 14 (+1 - klasa)\\
+ - liczba klas - 2 (0, 1 - odpowiednio "-", "+")\\
+ - liczba elementów na klasę - "-": 383, "+": 307\\
+
+\textbf{Rodzaje cech w zbiorze:}\\
+Wedle strony: \say{Istnieje 6 atrybutów liczbowych i 8 atrybutów kategorycznych. Etykiety zostały zmienione dla wygody algorytmów statystycznych. Na przykład atrybut 4 pierwotnie miał 3 etykiety p, g, gg i zostały one zmienione na etykiety 1,2,3.}\\
+
+\textbf{Lista cech w zbiorze (wedle strony):}
+\begin{itemize}
+  \item A1: 0,1 kategoryczne (poprzednio: a,b)
+  \item A2: liczbowe
+  \item A3: liczbowe
+  \item A4: 1,2,3 kategoryczne (poprzednio: p,g,gg)
+  \item A5: 1,2,3,4,5,6,7,8,9,10,11,12,13,14 kategoryczne (poprzednio: ff,d,i,k,j,aa,m,c,w,e,q,r,cc,x)
+  \item A6: 1,2,3,4,5,6,7,8,9 kategoryczne (poprzednio: ff,dd,j,bb,v,n,o,h,z)
+  \item A7: liczbowe
+  \item A8: 1, 0 kategoryczne (poprzednio: t,f)
+  \item A9: 1, 0 kategoryczne (poprzednio: t,f)
+  \item A10: liczbowe
+  \item A11: 1, 0 kategoryczne (poprzednio t,f)
+  \item A12: 1, 2, 3 kategoryczne (poprzednio: s,g,p)
+  \item A13: liczbowe
+  \item A14: liczbowe
+  \item A15: 1,2 atrybut klasy (poprzednio: +,-)
+\end{itemize}
+
+\section*{Przygotowanie danych}
+\linia\\
+ W ramach przygotowania danych do pracy nie musiałem dokonywać zmian bezpośrednio w oryginalnym pliku. Natomiast zgodnie z metodą z odbytych ćwiczeń "wyciąłem" z wczytanego pliku kolumny zawierające dane binarne. Dzieje się to w trakcie wykonywania skryptu.
+ 
+\section*{Kod}
+\linia\\
+\textbf{Link do projektu ze skryptem:} \textcolor{red}{\href{https://github.com/bvdzynski/up_ai-lab/tree/master/lab8_project_australian}{GITHUB}}\\
+
+Model klasyfikacyjny stworzyłem przy użyciu skryptu języka R. Opiera się on na kodzie z odbytych ćwiczeń.\\
+
+\textbf{Proces przebiega następująco (w kolejności):}
+\begin{itemize}
+ \item Wczytujemy plik z danymi.
+ \item Pozbywamy się kolumn z danymi binarnymi.
+ \item Dobieramy zbiory treningowe.
+ \item Uruchamiamy algorytm
+ \item Obliczamy macierz pomyłek
+ \item Obliczamy recognition rate na podstawie macierzy pomyłek
+\end{itemize}
+
+Obliczenia wykonywały się szybko, więc w tym przypadku nie było potrzeby automatyzacji procesu.\\
+
+Proces wykonałem (tak jak na ćwiczeniach) w kilku próbach, przy użyciu różnych wielkości zbioru treningowego. Wielkości starałem się dobierać proporcjonalnie do tego, jak to się odbywało na ćwiczeniach.
+
+\section*{Wyniki}
+\linia\\
+\textbf{Wielkość zbioru treningowego: 5}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+ & 0 & 1 & err  &  \\
+0 & \textbf{0.9815} & 0.0185 & 0.0185  \\
+1 & 0.7418 & \textbf{0.2582} & 0.7418 \\
+&&&
+\end{tabular}
+\caption{\textit{macierz pomyłek przy zbiorze treningowym równym 5 próbek}}
+\label{tab:1}
+\end{table}
+\textbf{Recognition Rate: 0.6584}\\
+
+\linia\\
+\textbf{Wielkość zbioru treningowego: 10}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+ & 0 & 1 & err  &  \\
+0 & \textbf{0.7037} & 0.2963 & 0.2963  \\
+1 & 0.3245 & \textbf{0.6755} & 0.3245 \\
+&&&
+\end{tabular}
+\caption{\textit{macierz pomyłek przy zbiorze treningowym równym 10 próbek}}
+\label{tab:2}
+\end{table}
+\textbf{Recognition Rate: 0.6912}\\
+
+\linia\\
+\textbf{Wielkość zbioru treningowego: 15}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+ & 0 & 1 & err  &  \\
+0 & \textbf{0.8880} & 0.1120 & 0.1120  \\
+1 & 0.4633 & \textbf{0.5367} & 0.4633 \\
+&&&
+\end{tabular}
+\caption{\textit{macierz pomyłek przy zbiorze treningowym równym 15 próbek}}
+\label{tab:3}
+\end{table}
+\textbf{Recognition Rate: 0.7319}\\
+
+\linia\\
+\textbf{Wielkość zbioru treningowego: 30}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+ & 0 & 1 & err  &  \\
+0 & \textbf{0.8934} & 0.1066 & 0.1066  \\
+1 & 0.4014 & \textbf{0.5986} & 0.4014 \\
+&&&
+\end{tabular}
+\caption{\textit{macierz pomyłek przy zbiorze treningowym równym 30 próbek}}
+\label{tab:4}
+\end{table}
+\textbf{Recognition Rate: 0.7621}\\
+
+\linia\\
+\textbf{Wielkość zbioru treningowego: 60}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+ & 0 & 1 & err  &  \\
+0 & \textbf{0.8470} & 0.1530 & 0.1530  \\
+1 & 0.3141 & \textbf{0.6859} & 0.3141 \\
+&&&
+\end{tabular}
+\caption{\textit{macierz pomyłek przy zbiorze treningowym równym 60 próbek}}
+\label{tab:5}
+\end{table}
+\textbf{Recognition Rate: 0.7762}\\
+
+\linia\\
+\textbf{Wielkość zbioru treningowego: 100}
+\begin{table}[H]
+\begin{tabular}{ccccc}
+ & 0 & 1 & err  &  \\
+0 & \textbf{0.8494} & 0.1506 & 0.1506  \\
+1 & 0.2481 & \textbf{0.7519} & 0.2481 \\
+&&&
+\end{tabular}
+\caption{\textit{macierz pomyłek przy zbiorze treningowym równym 100 próbek}}
+\label{tab:6}
+\end{table}
+\textbf{Recognition Rate: 0.8068}\\
+
+\linia\\
+
+\section*{Wnioski}
+
+Wyniki sklasyfikowania już dla 5 próbek treningowych osiągnęły wynik ~66\%.\\
+
+Procent prawidłowo sklasyfikowanych obiektów wzrastał wraz z zwiększaniem wielkości zbioru treningowego.\\
+
+Na podstawie osiągniętych wyników wnioskuję, że wielkość zbioru treningowego ma znaczący wpływ na osiągane wyniki w klasyfikacji metodą \textbf{\emph{Random Forest}}.
+
+\end{document}
