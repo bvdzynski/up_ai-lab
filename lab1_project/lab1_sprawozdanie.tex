@@ -1,0 +1,150 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+\renewcommand\familydefault{\sfdefault}
+\usepackage{tgheros}
+\usepackage[defaultmono]{droidmono}
+\usepackage{amsmath,amssymb,amsthm,textcomp}
+\usepackage{enumerate}
+\usepackage{multicol}
+\usepackage{tikz}
+
+\usepackage{geometry}
+\geometry{left=25mm,right=25mm,%
+bindingoffset=0mm, top=20mm,bottom=20mm}
+\linespread{1.3}
+\newcommand{\linia}{\rule{\linewidth}{0.5pt}}
+
+% custom theorems if needed
+\newtheoremstyle{mytheor}
+    {1ex}{1ex}{\normalfont}{0pt}{\scshape}{.}{1ex}
+    {{\thmname{#1 }}{\thmnumber{#2}}{\thmnote{ (#3)}}}
+
+\theoremstyle{mytheor}
+\newtheorem{defi}{Definition}
+
+% my own titles
+\makeatletter
+\renewcommand{\maketitle}{
+\begin{center}
+\vspace{2ex}
+{\huge \textsc{\@title}}
+\vspace{1ex}
+\\
+\linia\\
+\@author \hfill \@date
+\vspace{4ex}
+\end{center}
+}
+\makeatother
+%%%
+
+% custom footers and headers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{}
+\lfoot{Sztuczna Inteligencja, Sprawozdanie nr 1}
+\cfoot{}
+\rfoot{Strona \thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+%
+
+%%%----------%%%----------%%%----------%%%----------%%%
+
+\begin{document}
+
+\title{SI - SPRAWOZDANIE LAB nr 1}
+
+\author{Maciej Budzowski, dzienne, grupa L5}
+
+\date{14/04/2020}
+
+\maketitle
+
+\section*{Rozumowanie indukcyjne}
+Określamy je jako wnioskowanie „od szczegółu do ogółu”, czyli wnioskowanie o prawdziwości racji (wniosków) z prawdziwości następstw (przesłanek), przy czym (w pewnych interpretacjach) typy indukcji bardziej złożone stanowią rozumowania dedukcyjne.
+\\\\
+W odróżnieniu od rozumowania dedukcyjnego indukcja enumeracyjna niezupełna stanowi rozumowanie zawodne, czyli takie, w którym prawdziwość przesłanek nie gwarantuje prawdziwości wniosku.
+\\\\
+Głównymi postaciami indukcji są indukcja enumeracyjna niezupełna, indukcja enumeracyjna zupełna, indukcja eliminacyjna i indukcja statystyczna. Indukcja matematyczna jest natomiast uznawana za specyficzne rozumowanie dedukcyjne.
+\\\\
+Głównym problemem związanym z rozumowaniami indukcyjnymi jest to, czy stanowią one rozumowania uzasadniające: skoro konkluzja wnioskowania indukcyjnego nie jest w pełni uzasadniona przez jej przesłanki, pojawia się problem, w jaki sposób, w jakim stopniu i czy w ogóle wnioskowania indukcyjne prowadzą do prawdziwych wniosków. 
+\\\\
+Rozumowania indukcyjne bywają uważane za główne narzędzie nauk empirycznych, przeciwstawianych z tego powodu naukom dedukcyjnym (głównie matematyka i logika), posługujących się rozumowaniami dedukcyjnymi. Metoda stosowana przez nauki empiryczne polegająca na stosowaniu eksperymentów, obserwacji, indukcji enumeracyjnej i indukcji eliminacyjnej nosi miano metody indukcyjnej.
+\\\\
+Podział metod naukowych na dedukcyjne i indukcyjne stał się podstawą do wyróżnienia logiki indukcji jako samodzielnej dyscypliny badań logicznych. 
+\\\\
+Przykład rozumowania indukcyjnego: Testy na rozumowanie indukcyjne.
+\\\\\linia\\
+
+\section*{Rozumowanie dedukcyjne}
+Rodzaj rozumowania logicznego, mającego na celu dojście do określonego wniosku na podstawie założonego wcześniej zbioru przesłanek.
+\\\\
+Rozumowanie dedukcyjne w odróżnieniu od rozumowania indukcyjnego jest w całości zawarte wewnątrz swoich założeń, to znaczy nie wymaga tworzenia nowych twierdzeń czy pojęć, lecz jest tylko prostym wyciąganiem wniosków. Jeśli jest przeprowadzone poprawnie, zaś zbiór przesłanek nie zawiera zdań fałszywych, to wnioski wyciągnięte w wyniku rozumowania dedukcyjnego są nieodparcie prawdziwe i nie można ich zasadnie zakwestionować. 
+\\
+\\
+Przykład rozumowania dedukcyjnego: Falsyfikacja hipotez (modus tollens: jeśli "p" to "q" i nie "q", to nie "p") poprzez wykazanie, że przesłanki  prowadzą  do  fałszywego  wniosku.
+\\\linia\\
+\textbf{Link do plików:} \textcolor{red}{\href{https://github.com/bvdzynski/up_ai-lab/tree/master/lab1_project}{GITHUB}}
+\section* {Opis oraz pliki reguł i modeli dla problemu podejmowania decyzji z jednym warunkiem:}
+Stworzony przeze mnie system ekspertowy polega na przydzieleniu rabatu (w \%) dla określonej wartości zamówienia. Sprawdzane jest kryterium: 'wartość zamówienia'.
+\newline
+\newline
+\begin{tabular}{|c|c|}
+    Wartość zamówienia & Rabat \\
+   < 50&0\%\\
+   50 - 100&5\%\\
+   100 - 200&7\%\\
+   200 - 400&10\%\\
+   400 - 500&15\%\\
+   500 - 1000&18\%\\
+   1000+&20\%\\
+\end{tabular}
+\newline
+
+Pliki dla powyższego problemu:
+\begin{itemize}
+    \item 'MO\_RABAT.bed'
+    \item 'RE\_RABAT.bed'
+\end{itemize}
+\linia
+\section* {Opis oraz pliki reguł i modeli dla problemu podejmowania decyzji z dwoma warunkami:}
+Stworzony przeze mnie system ekspertowy polega na przydzieleniu mandatu o danej kwocie w przypadku poruszania się na terenie zabudowanym (max. 50km/h) lub niezabudowanym (max. 80km/h). Sprawdzane są kryteria: 'prędkość' oraz 'zabudowany'.
+\newline
+\newline
+\begin{tabular}{|c|c|c|}
+
+    Prędkość & Zabudowany & Wysokość mandatu \\
+   <50&1&0 \\
+   50&1&50 \\
+   60&1&100 \\
+   80&1&200\\
+   100&1&300\\
+   120&1&500\\
+   140&1&1000\\
+   160&1&2000\\
+   <50&0&0 \\
+   60&0&0 \\
+   80&0&50\\
+   100&0&100\\
+   120&0&300\\
+   140&0&500\\
+   160&0&1000\\
+\end{tabular}
+\newline
+
+Pliki dla powyższego problemu:
+\begin{itemize}
+    \item 'MO\_MANDAT\_PREDKOSC.bed'
+    \item 'RE\_MANDAT\_PREDKOSC.bed'
+\end{itemize}
+
+\end{document}
